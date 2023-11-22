@@ -63,6 +63,7 @@ class Numeric(Problem):
             varnames.append(splitfile[0])
             low.append(splitfile[1])
             up.append(splitfile[2].strip())
+
             i += 1
         self._domain = [varnames, low, up]
         return self._expression, self._domain
@@ -166,12 +167,12 @@ class Numeric(Problem):
 class Tsp(Problem):
     def __init__(self):
         Problem.__init__(self)
-        self._numCities = 0
-        self._locations = []       # A list of tuples
-        self._distanceTable = []
+        self.numCities = 0
+        self.locations = []       # A list of tuples
+        self.table = []
 
     def setVariables(self):
-        fileName = "problem/tsp30.txt"#input("Enter the file name of a TSP: ")
+        fileName = input("Enter the file name of a TSP: ")
         infile = open(fileName, 'r')
         # First line is number of cities
         self.numCities = int(infile.readline())
@@ -184,34 +185,35 @@ class Tsp(Problem):
         return self.numCities, self.locations
         
     def calcDistanceTable(self):
-        table = [[0] * self.numCities for _ in range(self.numCities)]
+        self.table = [[0] * self.numCities for _ in range(self.numCities)]
         for i in range(self.numCities):
             for j in range(self.numCities):
                 if i != j:
-                    table[i][j] = math.sqrt(
+                    self.table[i][j] = math.sqrt(
                         (self.locations[i][0] - self.locations[j][0]) ** 2 + (self.locations[i][1] - self.locations[j][1]) ** 2)
-        return table  # A symmetric matrix of pairwise distances
+
+
+        return self.table  # A symmetric matrix of pairwise distances
 
     def randomInit(self):   # Return a random initial tour
-        n = self.numCities[0]
+        n = self.numCities
         self.init = list(range(n))
         random.shuffle(self.init)
         return self.init
 
     def evaluate(self, current):
-        global NumEval
-        NumEval += 1
+        self._numEval += 1
         cost = 0
-        numCities, locations, table = p
-        for i in range(-1, numCities - 1):
-            cost += table[current[i]][current[i + 1]]
+        for i in range(-1, self.numCities - 1):
+            cost += self.table[current[i]][current[i + 1]]
         return cost
 
     def mutants(self, current): # Inversion only
-        pass
-        ### Your code goes here!
-        ###
-
+        neighbors = []
+        for i in range(self.numCities):
+            for j in range(i+1, self.numCities):
+                neighbors.append(self.inversion(current, i, j))
+        return neighbors
     def inversion(self, current, i, j):  ## Perform inversion
         curCopy = current[:]
         while i < j:
@@ -222,19 +224,19 @@ class Tsp(Problem):
 
     def randomMutant(self, current): # Inversion only
         while True:
-            i, j = sorted([random.randrange(p[0])
+            i, j = sorted([random.randrange(self.numCities)
                            for _ in range(2)])
             if i < j:
-                curCopy = inversion(current, i, j)
+                curCopy = self.inversion(current, i, j)
                 break
         return curCopy
 
     def describe(self):
         print()
-        n = self._numCities
+        n = self.numCities
         print("Number of cities:", n)
         print("City locations:")
-        locations = self._locations
+        locations = self.locations
         for i in range(n):
             print("{0:>12}".format(str(locations[i])), end = '')
             if i % 5 == 4:

@@ -7,6 +7,7 @@ def main():
     # Create an object for TSP
     p = Tsp()        # Create a problem object 
     p.setVariables() # Set its class variables (numCities, locations)
+    p.calcDistanceTable()
     # Call the search algorithm
     firstChoice(p)
     # Show the problem to be solved
@@ -16,9 +17,21 @@ def main():
     p.report()
     
 def firstChoice(p):
-    ###
-    ### Your code goes here!
-    ###
+    current = p.randomInit()   # 'current' is a list of city ids
+    valueC = p.evaluate(current)
+    i = 0
+    while i < LIMIT_STUCK:
+        successor = p.randomMutant(current)
+        valueS = p.evaluate(successor)
+        if valueS < valueC:
+            current = successor
+            valueC = valueS
+            i = 0              # Reset stuck counter
+        else:
+            i += 1
+    p._solution = current
+    p._value = valueC
+    return current, valueC
 
 def displaySetting():
     print()

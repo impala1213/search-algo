@@ -14,14 +14,28 @@ def main():
     p.report()
     
 def steepestAscent(p):
-    ###
-    ### Your code goes here!
-    ###
+    current = p.randomInit() # 'current' is a list of values
+    valueC = p.evaluate(current)
+    while True:
+        neighbors = p.mutants(current)
+        successor, valueS = bestOf(neighbors, p)
+        if valueS >= valueC:
+            break
+        else:
+            current = successor
+            valueC = valueS
+    return current, valueC
 
 def bestOf(neighbors, p):
-    ###
-    ### Your code goes here!
-    ###
+    best = neighbors[0]
+    print(best)
+    bestValue = p.evaluate(best)
+    for neighbor in neighbors[1:]:
+        tempValue = p.evaluate(neighbor)
+        if tempValue < bestValue:
+            best = neighbor
+            bestValue = tempValue
+    return best, bestValue
 
 def displaySetting(p):
     print()

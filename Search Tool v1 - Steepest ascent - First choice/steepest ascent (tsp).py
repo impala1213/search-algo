@@ -66,7 +66,9 @@ def evaluate(current, p): ###
     NumEval += 1
     cost = 0
     numCities, locations, table = p
+    print(current)
     for i in range(-1, numCities-1):
+        print(current[i])
         cost += table[current[i]][current[i+1]]
     return cost
 
