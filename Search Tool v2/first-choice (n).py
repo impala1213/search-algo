@@ -17,19 +17,19 @@ def main():
     
 def firstChoice(p):
     current = p.randomInit()   # 'current' is a list of values
-    valueC = p.evaluate(current)
+    valueC = p.evaluate(current) # 계산결과
     i = 0
-    while i < LIMIT_STUCK:
+    while i < LIMIT_STUCK: 
 
-        successor = p.randomMutant(current)
-        valueS = p.evaluate(successor)
-        if valueS < valueC:
-            current = successor
-            valueC = valueS
-            i = 0              # Reset stuck counter
+        successor = p.randomMutant(current) #랜덤한 하나의 변수에 +0.01 or -0.01 
+        valueS = p.evaluate(successor) # 변이된 변수 계산결과
+        if valueS < valueC: #변이된 변수가 더 나을경우
+            current = successor #현재변수 = 변이변수
+            valueC = valueS # 현재값 = 변이값
+            i = 0              # 스택 리셋
         else:
             i += 1
-    p.storeResult(current,valueC)
+    p.storeResult(current,valueC) #최선의 결과 저장
     return current, valueC
 
 def displaySetting(p):

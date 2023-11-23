@@ -1,10 +1,6 @@
 import random
 import math
 
-"""
-[Problem] class is complete as it is.
-Do not need to modify!!!
-"""
 class Problem:
     def __init__(self):
         self._solution = []
@@ -52,14 +48,14 @@ class Numeric(Problem):
     def setVariables(self):
         fileName = input("Enter the file name of a function: ")
         problem = open(fileName, 'r')
-        pro_line = problem.readlines()
-        self._expression = pro_line[0].strip()
+        pro_line = problem.readlines() #seperate with lines
+        self._expression = pro_line[0].strip() #set problem
         i = 1
         varnames = []
         low = []
         up = []
         while i < len(pro_line):
-            splitfile = pro_line[i].split(',')
+            splitfile = pro_line[i].split(',') #start with first line
             varnames.append(splitfile[0])
             low.append(splitfile[1])
             up.append(splitfile[2].strip())
@@ -78,41 +74,41 @@ class Numeric(Problem):
         return self._dx
 
     def randomInit(self): # Return a random initial point as a list
-        varNames = self._domain[0] # p[1] is domain: [varNames, low, up]
+        varNames = self._domain[0] # domain: [varNames, low, up]
         low = self._domain[1]
         up = self._domain[2]
-        init = [random.uniform(int(low[i]), int(up[i])) for i in range(len(varNames))]
+        init = [random.uniform(int(low[i]), int(up[i])) for i in range(len(varNames))] #make a list with low-high(random)
         return init
 
     def evaluate(self, current):
-        self._numEval += 1
-        expr = self._expression  # p[0] is function expression
-        varNames = self._domain[0]  # p[1] is domain: [varNames, low, up]
+        self._numEval += 1 #counting while 100
+        expr = self._expression  # expression
+        varNames = self._domain[0]  #domain: [varNames, low, up]
         for i in range(len(varNames)):
-            assignment = varNames[i] + '=' + str(current[i])
-            exec(assignment)
+            assignment = varNames[i] + '=' + str(current[i]) #current = randominit -> low~high (random)
+            exec(assignment) # x1 = random
 
-        return eval(expr)
+        return eval(expr) #expr을 계산하여 리턴
 
-    def mutants(self, current):
-        neighbors = []  # list of all feasible neighboring solutions
-        for i in range(len(current)):
-            for d in [-self._delta, self._delta]:
-                neighbor = self.mutate(current, i, d)
-                if self.isLegal(neighbor):
+    def mutants(self, current): #for steepest ascent
+        neighbors = []  
+        for i in range(len(current)): #변수 수만큼 반복
+            for d in [-self._delta, self._delta]: #delta = 0.01
+                neighbor = self.mutate(current, i, d) #-0.1 +0.1인 neighbor 생성
+                if self.isLegal(neighbor): #neighbor가 low-high 사이라면 neighbor 리스트에 추가
                     neighbors.append(neighbor)
-        return neighbors
+        return neighbors #반환
 
-    def mutate(self, current, i, d): ## Mutate i-th of 'current' if legal
-        curCopy = current[:]
-        l = self._domain[1][i]  # Lower bound of i-th
-        u = self._domain[2][i]  # Upper bound of i-th
-        if int(l) <= (int(curCopy[i]) + d) <= int(u):
+    def mutate(self, current, i, d): 
+        curCopy = current[:] # current를 복사
+        l = self._domain[1][i]  # i번째 변수의 low값
+        u = self._domain[2][i]  # i번째 변수의 high값
+        if int(l) <= (int(curCopy[i]) + d) <= int(u): # i번째 변수가 low보다 크고 high보다 작다면 d만큼 더하기
             curCopy[i] += d
-        return curCopy
+        return curCopy #변이된 값 반환
 
-    def randomMutant(self, current):
-        i = random.randint(0, len(current) - 1)
+    def randomMutant(self, current): #for first choice
+        i = random.randint(0, len(current) - 1) # current = randominit
         d = random.choice([-self._delta, self._delta])
         return self.mutate(current, i, d,)
 
