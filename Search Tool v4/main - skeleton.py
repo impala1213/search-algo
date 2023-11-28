@@ -3,18 +3,20 @@ from optimizer import *
 
 
 def main():
-    p, alg = readPlanAndCreate()  # Setup and create (problem, algorithm)
-    conductExperiment(p, alg)     # Conduct experiment & produce results
-    p.describe()                  # Describe the problem solved
-    alg.displayNumExp()           # Total number of experiments
-    alg.displaySetting()          # Show the algorithm settings
-    p.report()                    # Report result
+    p, alg, Atype = readPlanAndCreate()  # Setup and create (problem, algorithm)
+    conductExperiment(p, alg, Atype)  # Conduct experiment & produce results
+    p.describe()  # Describe the problem solved
+    alg.displayNumExp()  # Total number of experiments
+    alg.displaySetting()  # Show the algorithm settings
+    p.report()  # Report result
+
 
 def readPlanAndCreate():
     parameters = readValidPlan()  # Read and store in 'parameters'
     p = createProblem(parameters)
-    alg = createOptimizer(parameters)
-    return p, alg
+    alg, Atype = createOptimizer(parameters)
+    return p, alg, Atype
+
 
 def readValidPlan():  # Gradient Descent cannot solve TSP
     while True:
@@ -26,12 +28,13 @@ def readValidPlan():  # Gradient Descent cannot solve TSP
             break
     return parameters
 
+
 def readPlan():
-    fileName = input("Enter the file name of experimental setting: ")
+    fileName = 'setupFile/exp.txt'#input("Enter the file name of experimental setting: ")
     infile = open(fileName, 'r')
-    parameters = { 'pType':0, 'pFileName':'', 'aType':0, 'delta':0,
-                   'limitStuck':0, 'alpha':0, 'dx':0, 'numRestart':0,
-                   'limitEval':0, 'numExp':0 }
+    parameters = {'pType': 0, 'pFileName': '', 'aType': 0, 'delta': 0,
+                  'limitStuck': 0, 'alpha': 0, 'dx': 0, 'numRestart': 0,
+                  'limitEval': 0, 'numExp': 0}
     parNames = list(parameters.keys())
     for i in range(len(parNames)):
         line = lineAfterComments(infile)
@@ -40,76 +43,59 @@ def readPlan():
         else:
             parameters[parNames[i]] = eval(line.rstrip().split(':')[-1][1:])
     infile.close()
-    return parameters             # Return a dictionary of parameters
+    return parameters  # Return a dictionary of parameters
 
-def lineAfterComments(infile):    # Ignore lines beginning with '#'
-    line = infile.readline()      # and then return the first line
-    while line[0] == '#':         # with no '#'
+
+def lineAfterComments(infile):  # Ignore lines beginning with '#'
+    line = infile.readline()  # and then return the first line
+    while line[0] == '#':  # with no '#'
         line = infile.readline()
     return line
 
-def createProblem(parameters): ###
-    # Create a problem instance (a class object) 'p' of the type as 
+
+def createProblem(parameters):  ###
+    # Create a problem instance (a class object) 'p' of the type as
     # specified by 'pType', set the class variables, and return 'p'.
-    print("Select the problem type:")
-    print("  1. Numerical Optimization")
-    print("  2. TSP")
-    pType = int(input("Enter the number: "))
-    if pType == 1:
-        p = Numeric()
-        p.setVariables()
-    elif pType == 2:
-        p = Tsp()
-        p.setVariables()
-        p.calcDistanceTable()
+    p = parameters['pType']
+    if p == 1:
+            p = Numeric()
+            #p.setVariables()
+    elif p == 2:
+            p = Tsp()
+            #p.setVariables()
+            #p.calcDistanceTable()
+
     return p
-
-def createOptimizer(parameters): ###
-    # Create an optimizer instance (a class object) 'alg' of the type  
+def createOptimizer(parameters):  ###
+    # Create an optimizer instance (a class object) 'alg' of the type
     # as specified by 'aType', set the class variables, and return 'alg'.
-    optimizers = { 1: 'SteepestAscent()',
-                   2: 'FirstChoice()',
-                   3: 'Stochastic()',
-                   4: 'GradientDescent()',
-                   5: 'SimulatedAnnealing()' }  # 선택 가능한 알고리즘 목록
-    aType = int(input("Enter the number: "))
-    if(invalid(pType,aType)):
-        exit()
-    if aType == 1:
-        alg = SteepestAscent()
-        alg.setVariables(pType)
-    elif aType == 2:
-        alg = FirstChoice()
-        alg.setVariables(pType)
-    elif aType == 3:
-        alg = Stochastic()
-        alg.setVariables(pType)
-    elif aType == 4:
-        alg = GradientDescent()
-        alg.setVariables(pType)
-    elif aType == 5:
-        alg = SimulatedAnnealing()
-        alg.setVariables(pType)
-    return alg
+    optimizers = {1: 'SteepestAscent()',
+                  2: 'FirstChoice()',
+                  3: 'Stochastic()',
+                  4: 'GradientDescent()',
+                  5: 'SimulatedAnnealing()'}  # 선택 가능한 알고리즘 목록
+    Atype = parameters['aType']
+    alg = eval(optimizers[Atype])
+    return alg,Atype
 
-def conductExperiment(p, alg):
-    aType = alg.getAType()
+
+def conductExperiment(p, alg, aType):
     if 1 <= aType <= 4:
         alg.randomRestart(p)
     else:
         alg.run(p)
     bestSolution = p.getSolution()
-    bestMinimum = p.getValue()    # First result is current best
+    bestMinimum = p.getValue()  # First result is current best
     numEval = p.getNumEval()
-    sumOfMinimum = bestMinimum    # Prepare for averaging
-    sumOfNumEval = numEval        # Prepare for averaging
-    sumOfWhen = 0                 # When the best solution is found
+    sumOfMinimum = bestMinimum  # Prepare for averaging
+    sumOfNumEval = numEval  # Prepare for averaging
+    sumOfWhen = 0  # When the best solution is found
     if 5 <= aType <= 6:
         sumOfWhen = alg.getWhenBestFound()
     numExp = alg.getNumExp()
     for i in range(1, numExp):
         p.resetNumEval()
-        
+
         if 1 <= aType <= 4:
             alg.randomRestart(p)
         else:
@@ -130,6 +116,7 @@ def conductExperiment(p, alg):
     results = (bestSolution, bestMinimum, avgMinimum,
                avgNumEval, sumOfNumEval, avgWhen)
     p.storeExpResult(results)
+
 
 main()
 

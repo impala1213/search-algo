@@ -225,7 +225,7 @@ class SimulatedAnnealing(MetaHeuristics):
         MetaHeuristics.displaySetting(self)
 
     def run(self, p):
-        ??
+        pass
         p.storeResult(best, valueBest)
 
     def initTemp(self, p): # To set initial acceptance probability to 0.5

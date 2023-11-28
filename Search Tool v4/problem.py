@@ -91,12 +91,12 @@ class Numeric(Problem):
         pro_line = problem.readlines()  # seperate with lines
         self._expression = pro_line[0].strip()  # set problem
         i = 1
-        varnames = []
+        varNames = []
         low = []
         up = []
         while i < len(pro_line):
             splitfile = pro_line[i].split(',')  # start with first line
-            varnames.append(splitfile[0])
+            varNames.append(splitfile[0])
             low.append(splitfile[1])
             up.append(splitfile[2].strip())
 
