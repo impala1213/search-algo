@@ -1,0 +1,6 @@
+20 + math.e - 20 * math.exp(-(1/5) * math.sqrt((1/5) * (x1 ** 2 + x2 ** 2 + x3 ** 2 + x4 ** 2 + x5 ** 2))) - math.exp((1/5) * (math.cos(2 * math.pi * x1) + math.cos(2 * math.pi * x2) +math.cos(2 * math.pi * x3) +math.cos(2 * math.pi * x4) +math.cos(2 * math.pi * x5)))
+x1,-30,30
+x2,-30,30
+x3,-30,30
+x4,-30,30
+x5,-30,30
