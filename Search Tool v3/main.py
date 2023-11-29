@@ -24,13 +24,23 @@ def selectProblem():
     # Your code goes here!
     # 1. 클래스 생성
     # 2. 파일로 부터 문제 읽어오기
+    setup = Setup()
+    delta = setup.getDelta()
+    alpha = setup.getAlpha()
+    dx = setup.getDx()
     if pType == 1:
         p = Numeric()
         p.setVariables()
+        p.setDelta(delta)
+        p.setAlpha(alpha)
+        p.setDx(dx)
     elif pType == 2:
         p = Tsp()
         p.setVariables()
         p.calcDistanceTable()
+        p.setDelta(delta)
+        p.setAlpha(alpha)
+        p.setDx(dx)
     return p, pType
 
 def selectAlgorithm(pType):

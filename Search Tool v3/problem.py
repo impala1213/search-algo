@@ -50,10 +50,6 @@ class Numeric(Problem):
         Problem.__init__(self)
         self._expression = ''
         self._domain = []  # domain as a list
-        self._delta = 0.01  # Step size for axis-parallel mutation
-
-        self._alpha = 0.01  # Update rate for gradient descent
-        self._dx = 10 ** (-4)  # Increment for calculating derivative
 
     def setVariables(self):
         fileName = input("Enter the file name of a function: ")
@@ -74,13 +70,16 @@ class Numeric(Problem):
         self._domain = [varnames, low, up]
         return self._expression, self._domain
 
-    def getDelta(self):
+    def setDelta(self, delta):
+        self._delta = delta
         return self._delta
 
-    def getAlpha(self):
+    def setAlpha(self, alpha):
+        self._alpha = alpha
         return self._alpha
 
-    def getDx(self):
+    def setDx(self, dx):
+        self._dx = dx
         return self._dx
 
     def randomInit(self):  # Return a random initial point as a list
