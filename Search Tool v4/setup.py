@@ -6,7 +6,7 @@ class Setup:
         self._alpha = 0   # Update rate for gradient descent
         self._dx = 0      # Increment for calculating derivative
 
-    def setVariables(self, parameters):
+    def getVariables(self, parameters):
         self._aType = parameters['aType']
         self._delta = parameters['delta']
         self._alpha = parameters['alpha']

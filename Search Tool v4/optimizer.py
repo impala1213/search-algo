@@ -8,9 +8,8 @@ class Optimizer(Setup):
         Setup.__init__(self)
         self._pType = 0   # Type of problem
         self._numExp = 0  # Total number of experiments
-
     def setVariables(self, parameters):
-        Setup.setVariables(self, parameters)
+        #Setup.setVariables(self, parameters)
         self._pType = parameters['pType']
         self._numExp = parameters['numExp']
 
@@ -49,13 +48,15 @@ class HillClimbing(Optimizer):
     def run(self):
         pass
 
-    def randomRestart(self, p):          # 'alg' is the chosen hill climber
-        bestSolution = self._solution
-        bestMinimum = self._value
+    def randomRestart(self, p):
+        print(p)# 'alg' is the chosen hill climber
+        bestSolution = p._solution
+        print(bestSolution)
+        bestMinimum = p._value
         self.run(p)
-        if(bestMinimum > self._value):
-            bestSolution = self._solution
-            bestMinimum = self._value
+        if(bestMinimum > p._value):
+            bestSolution = p._solution
+            bestMinimum = p._value
         p.storeResult(bestSolution, bestMinimum)
 
 
@@ -77,7 +78,6 @@ class SteepestAscent(HillClimbing):
             else:
                 current = successor
                 valueC = valueS
-
         p.storeResult(current, valueC)
 
     def bestOf(self, neighbors, p):

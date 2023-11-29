@@ -19,8 +19,8 @@ class Problem(Setup):
         self._sumOfNumEval = 0
         self._avgWhen = 0
 
-    def setVariables(self, parameters):
-        Setup.setVariables(self, parameters)
+    def getVariables(self, parameters):
+        Setup.getVariables(self, parameters)
         self._pFileName = parameters['pFileName']
     
     def getSolution(self):
@@ -86,8 +86,7 @@ class Numeric(Problem):
         self._domain = []     # domain as a list
     
     def setVariables(self, parameters):
-        fileName = input("Enter the file name of a function: ")
-        problem = open(fileName, 'r')
+        problem = open(self._pFileName, 'r')
         pro_line = problem.readlines()  # seperate with lines
         self._expression = pro_line[0].strip()  # set problem
         i = 1
@@ -193,13 +192,12 @@ class Numeric(Problem):
 class Tsp(Problem):
     def __init__(self):
         Problem.__init__(self)
-        self._numCities = 0
+        self.numCities = 0
         self._locations = []       # A list of tuples
-        self._distanceTable = []
+        self.table = []
 
     def setVariables(self, parameters):
-        fileName = input("Enter the file name of a TSP: ")
-        infile = open(fileName, 'r')
+        infile = open(self._pFileName, 'r')
         # First line is number of cities
         self.numCities = int(infile.readline())
         self.locations = []
@@ -217,12 +215,12 @@ class Tsp(Problem):
                     self.table[i][j] = math.sqrt(
                         (self.locations[i][0] - self.locations[j][0]) ** 2 + (
                                     self.locations[i][1] - self.locations[j][1]) ** 2)
-        return table # A symmetric matrix of pairwise distances
+         # A symmetric matrix of pairwise distancs
 
     def randomInit(self):   # Return a random initial tour
         n = self.numCities
-        self.init = list(range(n))
-        random.shuffle(self.init)
+        init = list(range(n))
+        random.shuffle(init)
         return init
 
     def evaluate(self, current):
@@ -230,7 +228,7 @@ class Tsp(Problem):
         tourcost = 0
         for i in range(-1, self.numCities-1):
             tourcost += self.table[current[i]][current[i+1]]
-        return tourCost
+        return tourcost
 
     def mutants(self, current): # Inversion only
         neighbors = []
@@ -244,7 +242,7 @@ class Tsp(Problem):
         while i < j :
             mutant[i], mutant[j] = mutant[j], mutant[i]
             i += 1
-            j += 1
+            j -= 1
         return mutant
 
     def randomMutant(self, current): # Inversion only
@@ -257,10 +255,10 @@ class Tsp(Problem):
 
     def describe(self):
         print()
-        n = self._numCities
+        n = self.numCities
         print("Number of cities:", n)
         print("City locations:")
-        locations = self._locations
+        locations = self.locations
         for i in range(n):
             print("{0:>12}".format(str(locations[i])), end = '')
             if i % 5 == 4:

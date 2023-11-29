@@ -56,14 +56,17 @@ def lineAfterComments(infile):  # Ignore lines beginning with '#'
 def createProblem(parameters):  ###
     # Create a problem instance (a class object) 'p' of the type as
     # specified by 'pType', set the class variables, and return 'p'.
-    p = parameters['pType']
-    if p == 1:
+    ptype = parameters['pType']
+    if ptype == 1:
             p = Numeric()
-            #p.setVariables()
-    elif p == 2:
+            p.getVariables(parameters)
+            p.setVariables(parameters)
+
+    elif ptype == 2:
             p = Tsp()
-            #p.setVariables()
-            #p.calcDistanceTable()
+            p.getVariables(parameters)
+            p.setVariables(parameters)
+            p.calcDistanceTable()
 
     return p
 def createOptimizer(parameters):  ###
@@ -76,6 +79,7 @@ def createOptimizer(parameters):  ###
                   5: 'SimulatedAnnealing()'}  # 선택 가능한 알고리즘 목록
     Atype = parameters['aType']
     alg = eval(optimizers[Atype])
+    alg.setVariables(parameters)
     return alg,Atype
 
 
@@ -101,6 +105,7 @@ def conductExperiment(p, alg, aType):
         else:
             alg.run(p)
         newSolution = p.getSolution()
+        print(newSolution)
         newMinimum = p.getValue()  # New result
         numEval = p.getNumEval()
         sumOfMinimum += newMinimum
