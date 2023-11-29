@@ -30,7 +30,7 @@ def readValidPlan():  # Gradient Descent cannot solve TSP
 
 
 def readPlan():
-    fileName = 'setupFile/exp.txt'#input("Enter the file name of experimental setting: ")
+    fileName = input("Enter the file name of experimental setting: ")
     infile = open(fileName, 'r')
     parameters = {'pType': 0, 'pFileName': '', 'aType': 0, 'delta': 0,
                   'limitStuck': 0, 'alpha': 0, 'dx': 0, 'numRestart': 0,
@@ -85,7 +85,7 @@ def createOptimizer(parameters):  ###
 
 def conductExperiment(p, alg, aType):
     if 1 <= aType <= 4:
-        alg.randomRestart(p)
+        alg.randomRestart(p,alg)
     else:
         alg.run(p)
     bestSolution = p.getSolution()
@@ -99,13 +99,11 @@ def conductExperiment(p, alg, aType):
     numExp = alg.getNumExp()
     for i in range(1, numExp):
         p.resetNumEval()
-
         if 1 <= aType <= 4:
-            alg.randomRestart(p)
+            alg.randomRestart(p,alg)
         else:
             alg.run(p)
         newSolution = p.getSolution()
-        print(newSolution)
         newMinimum = p.getValue()  # New result
         numEval = p.getNumEval()
         sumOfMinimum += newMinimum

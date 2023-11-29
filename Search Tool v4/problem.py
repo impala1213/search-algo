@@ -109,14 +109,15 @@ class Numeric(Problem):
         init = [random.uniform(int(low[i]), int(up[i])) for i in
                 range(len(varNames))]  # make a list with low-high(random)
         return init  # list of values
-        #self._numEval += 1  # counting while 100
+
+    def evaluate(self, current):
+        self._numEval += 1  # counting while 100
         expr = self._expression  # expression
         varNames = self._domain[0]  # domain: [varNames, low, up]
         for i in range(len(varNames)):
             assignment = varNames[i] + '=' + str(current[i])  # current = randominit -> low~high (random)
             exec(assignment)  # x1 = random
-        return eval(expr)
-
+        return eval(expr)  # expr을 계산하여 리턴
     def mutants(self, current):
         neighbors = []
         for i in range(len(current)):  # 변수 수만큼 반복
@@ -140,7 +141,7 @@ class Numeric(Problem):
         return self.mutate(current, i, d)
 
     def takeStep(self, x, v): # Take gradient and make update if legal
-        newX = [x[i] + self._alpha * v[i] for i in range(len(x))]
+        xCopy = [x[i] + self._alpha * v[i] for i in range(len(x))]
         if self.isLegal(xCopy):  # Check if 'xCopy' is within the domain
             return xCopy
         else:
@@ -224,7 +225,7 @@ class Tsp(Problem):
         return init
 
     def evaluate(self, current):
-       # self._numevals +=1
+        self._numEval +=1
         tourcost = 0
         for i in range(-1, self.numCities-1):
             tourcost += self.table[current[i]][current[i+1]]
@@ -249,7 +250,8 @@ class Tsp(Problem):
         while True:
             i, j = sorted([random.randrange(self.numCities)] for _ in range(2))
             if i < j:
-                mutant = self.inversion(current, i, j)
+
+                mutant = self.inversion(current, i[0], j[0])
                 break
         return mutant
 

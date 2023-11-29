@@ -4,11 +4,11 @@
 #    2. TSP
    Enter the number (pType) : 2
 #
-#   Enter the name of the file : problem/Convex.txt
-#   Enter the name of the file : problem/Griewank.txt
-#   Enter the name of the file : problem/Ackley.txt
-#   Enter the name of the file : problem/tsp30.txt
-   Enter the name of the file : problem/tsp50.txt
+# Enter the name of the file : problem/Convex.txt
+#  Enter the name of the file : problem/Griewank.txt
+#  Enter the name of the file : problem/Ackley.txt
+#  Enter the name of the file : problem/tsp30.txt
+  Enter the name of the file : problem/tsp50.txt
 #   Enter the name of the file : problem/tsp100.txt
 #
 # Select the search algorithm:
@@ -19,7 +19,7 @@
 #    4. Gradient Descent
 #  Metaheuristic algorithms:
 #    5. Simulated Annealing
-   Enter the number (aType) : 1
+   Enter the number (aType) : 3
 #
 # If you are solving a function optimization problem,
 #   what should be the step size for axis-parallel mutation?
