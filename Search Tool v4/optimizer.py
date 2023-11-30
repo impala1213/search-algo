@@ -229,16 +229,20 @@ class SimulatedAnnealing(MetaHeuristics):
         best = current[:]
         valueBest = valueC
         t = self.initTemp(p)
-        while t > 1e-3:  # 종료 조건 (온도가 충분히 낮아질 때까지)
+        i = 0
+        while t > 0 and i < self._limitEval:  # 종료 조건 (온도가 충분히 낮아질 때까지)
             neighbor = p.randomMutant(current)
             valueN = p.evaluate(neighbor)
             deltaE = valueC - valueN
+            i += 1
             if deltaE > 0 or random.random() < math.exp(deltaE / t):
                 current = neighbor[:]
                 valueC = valueN
                 if valueC < valueBest:
                     best = current[:]
                     valueBest = valueC
+                    self._whenBestFound = i
+                    i = 0
             t = self.tSchedule(t)
         p.storeResult(best, valueBest)
 
