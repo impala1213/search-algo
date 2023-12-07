@@ -99,6 +99,7 @@ class FirstChoice(HillClimbing):
         HillClimbing.displaySetting(self)
 
     def run(self, p):
+        outfile_fc = open("setupFile/record_fc.txt", 'w')
         current = p.randomInit()  # 'current' is a list of values
         valueC = p.evaluate(current)  # 계산결과
         i = 0
@@ -111,7 +112,9 @@ class FirstChoice(HillClimbing):
                 i = 0  # 스택 리셋
             else:
                 i += 1
+            outfile_fc.write(str(valueC) + "\n")
         p.storeResult(current, valueC)  # 최선의 결과 저장
+        print('*')
         return current, valueC
 
 
@@ -125,7 +128,7 @@ class Stochastic(HillClimbing):
     def run(self, p):
         current = p.randomInit()
         valueC = p.evaluate(current)
-        p.storeResult(current, valueC)
+        #p.storeResult(current, valueC)
         i = 0
         while i < self._limitStuck:
             neighbors = p.mutants(current)  # 현재값 주변의 이웃 생성
@@ -224,6 +227,7 @@ class SimulatedAnnealing(MetaHeuristics):
         print()
         MetaHeuristics.displaySetting(self)
     def run(self, p):
+        outfile_sa = open("setupFile/record_sa.txt", 'w')
         current = p.randomInit()  # 'current' is a list of values
         valueC = p.evaluate(current)
         best = current[:]
@@ -243,6 +247,7 @@ class SimulatedAnnealing(MetaHeuristics):
                     valueBest = valueC
                     self._whenBestFound = i
                     i = 0
+                outfile_sa.write(str(valueBest) + "\n")
             t = self.tSchedule(t)
         p.storeResult(best, valueBest)
 

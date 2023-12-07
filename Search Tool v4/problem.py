@@ -98,7 +98,6 @@ class Numeric(Problem):
             varNames.append(splitfile[0])
             low.append(splitfile[1])
             up.append(splitfile[2].strip())
-
             i += 1
         self._domain = [varNames, low, up]
 
